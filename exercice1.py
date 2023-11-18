@@ -4,17 +4,21 @@
 #respectando la sección critica, haga que el counter vaya del valor a 0. 
 
 import threading 
-# variable global x 
-x = 0 
-def incremento(): 
-    global x 
-    x += 1 
+# variable global x inicializada a el valor 
+x = 100000
+lock = threading.Lock()             #implementar bloqueo threading
+
+def decremento(): 
+    global x
+    with lock:                      #establecer un bloqueo de variable global
+        x -= 1
+
 def TareaThread(): 
-    for _ in range(100000): 
-        incremento() 
+    for _ in range(5000):           #como son 2 threads trabajando uno despues del otro el valor es 5000
+        decremento()
+
 def TareaPrin(): 
     global x 
-    x = 0 
     # creando hilos 
     t1 = threading.Thread(target=TareaThread) 
     t2 = threading.Thread(target=TareaThread) 
@@ -23,7 +27,8 @@ def TareaPrin():
     t2.start() 
     # uniendo hilos 
     t1.join() 
-    t2.join() 
+    t2.join()
+
 if __name__ == "__main__": 
     for i in range(10): 
         TareaPrin() 
