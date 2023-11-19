@@ -82,7 +82,7 @@ def validarData(entrada):
             encontradog=1
         else:
             encontradog=0
-        if encontrado==0:
+        if encontradog==0:
             invalidados=1
 
     noconcuerda=1
