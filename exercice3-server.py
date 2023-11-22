@@ -16,22 +16,22 @@ import sys
 
 # Dirección y puerto del servidor
 HOST = '127.0.0.1'
-PORT = 55556
+PORT = 55555
 
 # Crear un socket TCP/IP
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sockCli = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # Enlace del socket al host y puerto
 try:
-    server_socket.bind((HOST, PORT))
+    sockCli.bind((HOST, PORT))
 except socket.error:
-    print("Servidor no puede iniciarse")
+    print("Servidor no puede iniciarse.")
     exit()
-except Exception:
-    print("Servidor no puede iniciarse")
+except Exception as e:
+    print("Servidor no puede iniciarse.")
     exit()
 # Escuchar conexiones entrantes
-server_socket.listen()
+sockCli.listen()
 
 # Lista para almacenar las conexiones de los clientes
 clients = []
@@ -69,16 +69,16 @@ def handle_client(client_socket, client_address):
             clients.remove(client_socket)
             break
     
-# Metodo de Difusion de mensajes desde el servidor
+# Metodo de Difusion de mensajes desde el servidor A TODOS LOS CLIENTES
 def difusion():
     while True:
-        if len(clients) > 0:
+        if len(clients) >=1:
             try:
-                re=input("")
-                if len(re) > 0:
+                messj=input("")
+                if len(messj) > 0:
                     for cliente in clients:
                         try:
-                            cliente.send(str(re).encode('utf-8'))
+                            cliente.send(str(messj).encode('utf-8'))
                         except:
                             clients.remove(cliente)
             except Exception:
@@ -87,11 +87,11 @@ def difusion():
 
 
 # Ciclo principal para aceptar conexiones de clientes
-print("....SERVIDOR ACTIVO.... port:55556")
+print("....SERVIDOR ACTIVO.... port:55555")
 while True:
     try:
         # Aceptar una nueva conexión
-        client_socket, addr = server_socket.accept()
+        client_socket, addr = sockCli.accept()
         # print(f"Conexión establecida desde {addr}")
 
         # Agregar el socket del cliente a la lista

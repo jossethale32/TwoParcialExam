@@ -12,7 +12,7 @@ resp=""
 
 try:
     server_socket.bind((addr, port))
-    server_socket.listen(5)
+    server_socket.listen(50)
 except socket.error as tt:
     print("Error-Ya Existe un Servidor corriendo sobre este puerto ("+str(port)+")")
     server_socket.close()
@@ -144,12 +144,11 @@ def validarData(entrada):
             return f"Hola {nombreC}, veo que eres del país de {paisEncontrado} y tienes {edad} años, lo que indica que eres {frase}. Veo que tu fecha de Nacimiento concuerda con tu edad ({fechafix})"
 # Metodo para iniciar el servidor de sockets
 def start_server():
-    print("Servidor Iniciado...\nEsperando Conexion...")
+    print("Servidor Iniciado...\nEsperando Conexion... Port:"+str(port))
 
     while True:
         try:
             client_socket, addr = server_socket.accept()
-            # print(f"Cliente conectado: {addr} ")
             client_handler = threading.Thread(target=handle_client, args=(client_socket, addr))
             client_handler.start()
         except KeyboardInterrupt:

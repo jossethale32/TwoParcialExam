@@ -45,21 +45,21 @@ def consulInfo():
     entry_trama.grid(row=1, column=1, pady=5)
     entry_trama.focus()
 
-    boton_buscar = ttk.Button(
+    btnfind = ttk.Button(
         ventana_secundaria,
         text="Obtener Info",
         command=subconsultar
     )
     
-    boton_buscar.grid(row=1, column=2, pady=5)
+    btnfind.grid(row=1, column=2, pady=5)
 
-    boton_cerrar = ttk.Button(
+    btn_close = ttk.Button(
         ventana_secundaria,
         text="Cerrar ventana",
         command=ventana_secundaria.withdraw
     )
 
-    boton_cerrar.grid(row=1, column=3, pady=5)
+    btn_close.grid(row=1, column=3, pady=5)
 
     T.insert(tk.END, Fact)
     T.grid(row=2, column=0, columnspan=4, padx=10, pady=10)
@@ -73,20 +73,19 @@ def subconsultar():
         client_socket.connect(('localhost', 12345))
         # client_socket.settimeout(5)
         client_socket.send(str(entry_trama.get()).encode('utf-8'))
+
         texto = client_socket.recv(1024).decode('utf-8')
         T.delete('1.0', tk.END)
         T.insert(tk.END,texto)
         client_socket.close()
     except TimeoutError as e:
-        messagebox.showerror("⚠️Error", "Servidor no Responde")
-        # client_socket.close()
+        messagebox.showerror("Error", "Servidor no Responde")
         response = ""
     except socket.timeout as ee:
-        messagebox.showerror("⚠️Error", "Error de parte del servidor")
-        # client_socket.close()
+        messagebox.showerror("Error", "Error de parte del servidor")
         response = ""
     except socket.error as e:
-        messagebox.showerror("⚠️Error", "Verifica la Disponiblidad del servidor")
+        messagebox.showerror("Error", "Verifica la Disponiblidad del servidor")
         quit()
     
     ventana_secundaria.update_idletasks()

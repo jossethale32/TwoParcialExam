@@ -10,8 +10,9 @@ lock = threading.Lock()             #implementar bloqueo threading
 
 def decremento(): 
     global x
-    with lock:                      #establecer un bloqueo de variable global
-        x -= 1
+    lock.acquire()                      #establecer un bloqueo de variable global
+    x -= 1
+    lock.release()                      #liberar la variable
 
 def TareaThread(): 
     for _ in range(5000):           #como son 2 threads trabajando uno despues del otro el valor es 5000

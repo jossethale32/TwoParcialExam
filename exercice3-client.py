@@ -16,34 +16,40 @@ import threading
 import requests
 
 # Dirección y puerto del servidor
-HOST = '127.0.0.1'
-PORT = 55556  # Cambiar a un puerto diferente
+host = '127.0.0.1'
+puerto = 55555  # Cambiar a un puerto diferente
 
 # Crear un socket TCP/IP
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# Conectar al servidor
+# Conectar al server
 try:
-    client_socket.connect((HOST, PORT))
+    client_socket.connect((host, puerto))
 except socket.error:
-    print("Servidor no responde. Desconectando.")
+    print("Servidor no responde. Desconectando..")
     exit()
 
-# Solicitar al usuario que ingrese un nombre o identificación única
-client_name = input("Ingresa tu nombre: ")
+# Solicitar al usuario su nombre
+try:
+    name = input("Ingresa tu nombre: ")
+except KeyboardInterrupt:
+    exit()
 
-if client_name.isalpha() or client_name.isdigit():
+
+if name.isalpha() or name.isdigit():
+    #validar que sea nombre o numero
+
     try:
-        full_message = f"{client_name} se ha Conectado"
+        full_message = f"{name} se ha Conectado"
         client_socket.send(full_message.encode('utf-8'))
     except KeyboardInterrupt:
         exit()
     # Enviar mensajes al servidor
-    def send_messages():
+    def sendMsj():
         while True:
             try:
                 message = input()
-                full_message = f"{client_name}: {message}"
+                full_message = f"{name}: {message}"
                 client_socket.send(full_message.encode('utf-8'))
 
                 # Si el usuario escribe "adios", cerrar el cliente
@@ -61,7 +67,7 @@ if client_name.isalpha() or client_name.isdigit():
                 break
 
     # Función para recibir mensajes del servidor
-    def receive_messages():
+    def getMSj():
         while True:
             try:
                 message = client_socket.recv(1024).decode('utf-8')
@@ -73,20 +79,20 @@ if client_name.isalpha() or client_name.isdigit():
     
     try:
         # Iniciar un hilo para recibir mensajes del servidor
-        receive_thread = threading.Thread(target=receive_messages)
+        receive_h1 = threading.Thread(target=getMSj)
 
         # Iniciar un hilo para enviar mensajes del servidor
-        send_thread = threading.Thread(target=send_messages)
+        send_h2 = threading.Thread(target=sendMsj)
         
-        receive_thread.start()
-        send_thread.start()
+        receive_h1.start()
+        send_h2.start()
 
-        receive_thread.join()
-        send_thread.join()
+        receive_h1.join()
+        send_h2.join()
     except (KeyboardInterrupt, SystemExit):
         exit()
     # Cerrar el socket después de salir del bucle
     client_socket.close()
 else:
-    print("Valor ingresado no valido!")
+    print("Valor nombre o ID ingresado no valido!")
     client_socket.close()
